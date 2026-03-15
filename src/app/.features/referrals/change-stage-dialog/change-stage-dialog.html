@@ -1,0 +1,27 @@
+
+<div class="card bg-base-100 shadow-xl ">
+      <div class="card-body min-w-180 overflow-auto"  >
+        <h2 class="card-title">Change Stage Dialog</h2>
+       <h2 >Current Stage: {{currentStage()}}</h2>
+<div>
+   <span>New stage: </span>
+
+<select class="select select-primary" #stageSelector>
+  <option disabled selected>Select new stage</option>
+
+  @for (stage of Stage | enumKeyValue; track stage.key) {
+    <option (click)="changeStage(stage.key)">{{stage.key}}</option>
+}
+</select>
+</div>
+<h2 class="card-subtitle">Comments</h2>
+<textarea class="textarea min-w-full h-64 max-h-64 overflow-auto"  #txt></textarea>
+      </div>
+      
+      <div class="card-footer flex space-x-1 justify-end my-1.5  mx-6">
+        <button class="btn btn-secondary"  (click)="doCloseDialog()">Cancel</button>
+        <button class="btn btn-primary w-24 disabled:cursor-not-allowed disabled:opacity-40" 
+        [disabled]='stageSelector.value === "Select new stage" '
+        (click)=" saveNewChanges(stageSelector.value, txt.value)">Save</button>
+    </div>  
+

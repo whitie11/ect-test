@@ -1,0 +1,99 @@
+<!-- <form (submit)="onSubmit($event)">
+  <div>
+    <label>
+      Email
+      <input type="email" [formField]="loginForm.email" />
+    </label>
+    @if (loginForm.email().touched() && loginForm.email().invalid()) {
+    <span class="error">
+      {{ loginForm.email().errors()[0].message }}
+    </span>
+    }
+  </div>
+  <div>
+    <label>
+      Password
+      <input type="password" [formField]="loginForm.password" />
+    </label>
+    @if (loginForm.password().touched() && loginForm.password().invalid()) {
+    <span class="error">
+      {{ loginForm.password().errors()[0].message }}
+    </span>
+    }
+  </div>
+  <button [disabled]="loginForm().invalid()">Sign In</button>
+</form> -->
+
+<div class="text-gray-700 min-h-screen flex flex-col items-center justify-center">
+  
+
+
+  <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+    <h1 class="text-3xl font-bold text-center text-gray-800  py-6">ECT Pathway</h1>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6 ">Login</h1>
+
+    <form (submit)="onSubmit($event)" class=" group" novalidate>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-semibold mb-2">Username</label>
+        <input type="text" [formField]="loginForm.username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ loginForm.username().touched() && loginForm.username().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }} " placeholder="Enter your username">
+
+        @if (loginForm.username().touched() && loginForm.username().invalid()) {
+        <p class="mt-1 text-xs text-red-500">
+          {{ loginForm.username().errors()[0].message }}
+        </p>
+        }
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+
+        <input type="password" [formField]="loginForm.password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 
+         {{ loginForm.password().touched() && loginForm.password().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }}" placeholder="Enter your password">
+
+
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+        <span class="mt-1 text-xs text-red-500">
+          {{ loginForm.password().errors()[0].message }}
+        </span>
+        }
+      </div>
+
+
+      <!-- <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">Sign
+        In</button> -->
+
+      <!-- <button type="submit" class=" w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg 
+        transition group-invalid:pointer-events-none group-invalid:opacity-30"
+        [disabled]="true">Sign in</button>
+-->
+      <button type="submit" [disabled]="loginForm().invalid()" class="
+    w-full rounded-lg px-4 py-2 font-semibold
+    bg-blue-600 text-white hover:bg-blue-700
+     disabled:cursor-not-allowed disabled:opacity-40
+  ">
+        Submit
+      </button>
+
+    </form>
+
+    <div [hidden]="!isLoading()" class="flex justify-center mt-4">
+      <svg class="h-6 w-6 animate-spin" viewBox="0 0 100 100">
+        <circle fill="none" stroke-width="10" class="stroke-current opacity-40" cx="50" cy="50" r="40" />
+        <circle fill="none" stroke-width="10" class="stroke-current" stroke-dasharray="250" stroke-dashoffset="210"
+          cx="50" cy="50" r="40" />
+      </svg>
+    </div>
+
+<div [hidden]="!errorMsg().active" class="flex justify-center mt-4">
+  <p class="text-red-500">{{ errorMsg().message }}</p>
+</div>
+
+
+  </div>
+</div>

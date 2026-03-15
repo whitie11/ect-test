@@ -1,0 +1,120 @@
+<div class="flex h-full ">
+
+  <div class=" bg-blue-100 text-white flex-col md:w-70 justify-center overflow-auto">
+
+<div>
+      <h3 class=" bg-blue-600 text-center my-4">New Referrals ({{ refNotAllocated().length }})</h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refNotAllocated(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+        <li class="bg-red-700">There are no new referrals.</li>
+        } -->
+      </ul>
+    </div>
+
+    <div>
+      <h3 class=" bg-blue-600 text-center my-4">Pending Referrals ({{ refPending().length }})</h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refPending(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+        <li class="bg-red-700">There are no new referrals.</li>
+        } -->
+      </ul>
+    </div>
+
+    <div>
+      <h3 class=" bg-blue-600 text-center my-4">Referrals Waiting({{ refWaiting().length }})</h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refWaiting(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+      <li class="bg-red-700">No referrals pending</li>
+      } -->
+      </ul>
+    </div>
+
+    <div>
+      <h3 class=" bg-blue-600 text-center my-4">Referred to Preston ({{ refP().length }}) </h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refP(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+      <li class="bg-red-700">No pending referrals to Preston.</li>
+      } -->
+      </ul>
+    </div>
+
+    <div>
+      <h3 class=" bg-blue-600 text-center my-4">Referred to Blackburn ({{ refB().length }})</h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refB(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+      <li class="bg-red-700">No pending referrals to Blackburn</li>
+      } -->
+      </ul>
+    </div>
+
+    <div>
+      <h3 class=" bg-blue-600 text-center my-4">Treatment @ Preston ({{ refTreatP().length }})</h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refTreatP(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+      <li class="bg-red-700">There are no referrals in treatment at Preston.</li>
+      } -->
+      </ul>
+    </div>
+
+    <div>
+      <h3 class=" bg-blue-600 text-center my-4">Treatment @ Blackburn ({{ refTreatB().length }})</h3>
+      <ul class="space-y-4 mx-1.5">
+        @for (referral of refTreatB(); track referral.referralId) {
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+          <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
+        </div>
+        }
+        <!-- @empty {
+      <li class="bg-red-700">There are no referrals in treatment at Blackburn.</li>
+      } -->
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="hidden md:block bg-red-100 flex-1 w-full justify-center items-center overflow-auto ">
+    <div class=" h-full ">
+      @if (selectedReferralId() !== 0) {
+      <app-referral-details (refreshReferrals)="refreshReferrals($event)"
+        [selectedReferralId]="selectedReferralId()"></app-referral-details>
+      }
+      @else {
+      <p class="text-center text-2xl bg-amber-600">Select a referral to view details</p>
+      }
+
+
+    </div>
+  </div>
+
+
+</div>
