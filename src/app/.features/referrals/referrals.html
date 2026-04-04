@@ -2,7 +2,7 @@
 
   <div class=" bg-blue-100 text-white flex-col md:w-70 justify-center overflow-auto">
 
-<div>
+    <div>
       <h3 class=" bg-blue-600 text-center my-4">New Referrals ({{ refNotAllocated().length }})</h3>
       <ul class="space-y-4 mx-1.5">
         @for (referral of refNotAllocated(); track referral.referralId) {
@@ -20,7 +20,7 @@
       <h3 class=" bg-blue-600 text-center my-4">Pending Referrals ({{ refPending().length }})</h3>
       <ul class="space-y-4 mx-1.5">
         @for (referral of refPending(); track referral.referralId) {
-        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer">
+        <div (click)="setSelectedReferralId(referral.referralId)" class="cursor-pointer" >
           <li><app-referral-ref [referral]="referral"></app-referral-ref> </li>
         </div>
         }

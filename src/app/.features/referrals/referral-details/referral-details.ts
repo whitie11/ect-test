@@ -20,7 +20,7 @@ import { R } from '@angular/cdk/keycodes';
 export class ReferralDetails {
 @Output() refreshReferrals = new EventEmitter<number>();
 
- constructor(private overlay: Overlay) {}  
+constructor(private overlay: Overlay) {}  
 
 private overlayRef: OverlayRef | null = null;
 
@@ -56,8 +56,9 @@ this.overlayRef = this.overlay.create({
       this.saveAllChanges(n.newStage, n.notes);
     }); 
     this.overlayRef?.backdropClick().subscribe(() => this.overlayRef?.detach());
-  
 }
+
+
 selectedReferralId = input.required<number>();
 
 private referralService = inject(ReferralsService);
@@ -109,12 +110,12 @@ saveAllChanges(newStage: string, notes: string) {
   console.log('Saving changes with new stage:', newStage, 'and notes:');
   let refUpdateData: ReferralStageUpdateDto = {
     referralId: this.selectedReferral()?.id || 0,
-    userId: 1,
+    // userId: 1,
     currentStage: this.selectedReferral()?.stage || '',
     newStage: newStage,
     notes: notes 
   };
-  this.referralService.updateReferralStage(refUpdateData).subscribe({
+  this.referralService.updateReferralStage(refUpdateData)?.subscribe({
         next: (data) => {
           console.log('Referral Service updated successfully', data);
           // const res = JSON.parse(JSON.stringify(data));

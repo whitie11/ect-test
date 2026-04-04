@@ -11,6 +11,7 @@ import { EnumKeyValuePipe } from '../../../.pipe/enumPipe';
 export class ChangeStageDialog {
 @Output() closeDialog = new EventEmitter();
 @Output() saveChanges = new EventEmitter<{ newStage: string; notes: string }>();
+
 Stage = StageEnum;
 
 currentStage = signal('');

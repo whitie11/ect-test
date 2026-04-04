@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ReferralRefResponse } from './models/referral-ref-response';
 import { ReferralSuResponse } from './models/referral-su-response';
 import { ReferralStageUpdateDto } from './models/referral-stage-update-dto';
+import { Stage } from '../../.enums/stage';
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +26,18 @@ export class ReferralsService {
   return this.http.get<ReferralSuResponse>(this.apiRoot.concat(`referrals/${id}`));
   }
 
-  updateReferralStage(ref: ReferralStageUpdateDto) : Observable<ReferralSuResponse>{
-  return this.http.patch<ReferralSuResponse>(this.apiRoot.concat(`referrals/update`), ref);
+  updateReferralStage(ref: ReferralStageUpdateDto) : Observable<ReferralSuResponse> | null{
+   try {
+   let data =  this.http.patch<ReferralSuResponse>(this.apiRoot.concat(`referrals/update`), ref);
+   return data
+  } catch (error) {
+    return null
+   } 
+  
+  }
+
+  getReferralsByStage(stage: string) : Observable<ReferralRefResponse[]>{
+  return this.http.get<ReferralRefResponse[]>(this.apiRoot.concat(`referrals/stage/${stage}`))
   }
 }
 

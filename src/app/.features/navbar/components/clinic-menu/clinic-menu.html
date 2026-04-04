@@ -7,8 +7,8 @@ animate.leave="leave-animation">
 animate.leave="leave-animation" > 
   <p>Choose Clinic</p>
   <hr class="my-2 h-0.5 border-t-0 bg-neutral-200" />
-  <a (click)="doCloseMenu()">Avondale</a>
+  <a [routerLink]="['/home/clinics', clinicIdEnum.AVONDALE]" (click)="doCloseMenu()">Avondale</a>
   <hr class="my-2 h-0.5 border-t-0 bg-neutral-200" />
-  <a (click)="doCloseMenu()">Pendle View</a>
+  <a [routerLink]="['/home/clinics', clinicIdEnum.PENDLEVIEW]" (click)="doCloseMenu()">Pendle View</a>
 </div>
 </div>

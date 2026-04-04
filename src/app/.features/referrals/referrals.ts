@@ -4,7 +4,7 @@ import { ReferralRefResponse } from '../../.services/referrals/models/referral-r
 import { ReferralRef } from './referral-ref/referral-ref';
 import { ReferralDetails } from './referral-details/referral-details';
 import { Router } from '@angular/router';
-import { transform } from 'typescript';
+
 
 @Component({
   selector: 'app-referrals',
@@ -36,7 +36,7 @@ refTreatB = signal<ReferralRefResponse[]>([]);
     if (!isNaN(this.refId())) {
       this.selectedReferralId.set(this.refId());
     } else {
-      console.warn('Invalid refId input:', this.refId());
+      console.warn('refId set to 0:');
        this.selectedReferralId.set(0);
     } 
 

@@ -8,6 +8,7 @@ import { authGuardAny } from './.services/auth/auth-guard-any';
 import { authGuard } from './.services/auth/auth-guard';
 import { Admin } from './.features/admin/admin';
 import { NewReferral } from './.features/referrals/new-referral/new-referral';
+import { Clinic } from './.features/clinic/clinic';
 
 
 export const routes: Routes = [
@@ -48,10 +49,10 @@ export const routes: Routes = [
             },
 
             {
-                path: 'clincs',
-                component: PageNotBuilt,
+                path: 'clinics/:clinicIdEnum',
+                component: Clinic,
                 canActivate: [authGuardAny],
-                data: { pageName: 'Clinic Lists' }
+                data: { roles: ['ADMIN', 'USER'] }
             },
             {
                 path: 'reports',
