@@ -1,20 +1,22 @@
 import { ClinicIdEnum } from "../.enums/clinicIdEnum";
-import { Consent, Section } from "../.enums/section";
-import { TreatmentStage } from "../.enums/treatmentStage";
+import { ConsentEnum, SectionEnum } from "../.enums/section";
+import { TreatmentStageEnum } from "../.enums/treatmentStage";
+import { ServiceUser } from "./service-user";
 
 export interface Appointment {
-    refId: number;
+    referralId: number;
     date: Date;
     clinic: ClinicIdEnum;
     serviceUserId: number;
-    firstName: string;
-    midName: string;
-    lastName: string;
-    nhsNo: string;
-    treatmentStage: TreatmentStage
+     serviceUser: ServiceUser;
+    // firstName: string;
+    // midName: string;
+    // lastName: string;
+    // nhsNo: string;
+    treatmentStage: TreatmentStageEnum
     treatmentNo: number;
-    section: Section;
-    consent: Consent;
+    section: SectionEnum;
+    consent: ConsentEnum;
     residing: string
 }
 

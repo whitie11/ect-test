@@ -53,7 +53,7 @@ this.overlayRef = this.overlay.create({
       this.closeChangeStageDialog();
     });
     componentRef.instance.saveChanges.subscribe((n) => {
-      this.saveAllChanges(n.newStage, n.notes);
+      this.saveAllChanges(n.newStageStr, n.notes);
     }); 
     this.overlayRef?.backdropClick().subscribe(() => this.overlayRef?.detach());
 }
@@ -106,13 +106,13 @@ closeChangeStageDialog() {
   this.overlayRef?.detach();
 }
 
-saveAllChanges(newStage: string, notes: string) {
-  console.log('Saving changes with new stage:', newStage, 'and notes:');
+saveAllChanges(newStageStr: string, notes: string) {
+  console.log('Saving changes with new stage:', newStageStr, 'and notes:');
   let refUpdateData: ReferralStageUpdateDto = {
     referralId: this.selectedReferral()?.id || 0,
     // userId: 1,
     currentStage: this.selectedReferral()?.stage || '',
-    newStage: newStage,
+    newStage: newStageStr,
     notes: notes 
   };
   this.referralService.updateReferralStage(refUpdateData)?.subscribe({

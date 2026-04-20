@@ -1,5 +1,5 @@
 import { Component, EventEmitter, model, Output, signal } from '@angular/core';
-import { Stage as StageEnum } from '../../../.enums/stage';  
+import { StageEnum } from '../../../.enums/stage';  
 import { EnumKeyValuePipe } from '../../../.pipe/enumPipe';
 
 @Component({
@@ -10,15 +10,16 @@ import { EnumKeyValuePipe } from '../../../.pipe/enumPipe';
 })
 export class ChangeStageDialog {
 @Output() closeDialog = new EventEmitter();
-@Output() saveChanges = new EventEmitter<{ newStage: string; notes: string }>();
+@Output() saveChanges = new EventEmitter<{ newStageStr: string; notes: string }>();
 
 Stage = StageEnum;
 
 currentStage = signal('');
 newStage = model('');
-
+newStageStr =''
 changeStage(newStage: any) {
-  // this.newStage.set(newStage);   
+  //  this.newStage.set(newStage); 
+  this.newStageStr = newStage.key; // Assuming stage has a 'key' property  
 }
 
 getextBoxVal(txt: any) {
@@ -30,9 +31,10 @@ doCloseDialog() {  // Logic to close the dialog
   this.closeDialog.emit();
 }
 
-saveNewChanges(newStage: string, notes: string) {
+saveNewChanges(notes: string) {
   console.log('Saving changes with new stage:');
-  this.saveChanges.emit({ newStage, notes});
+  // Use the new stage set by changeStage method
+  this.saveChanges.emit({ newStageStr: this.newStageStr, notes });
   this.closeDialog.emit();
 }
 }

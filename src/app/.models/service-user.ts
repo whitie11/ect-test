@@ -1,10 +1,13 @@
+import { GenderEnum } from "../.enums/gender";
+
 export interface ServiceUser {
     id: number;
     firstname: string;
     lastname: string;
     midname: string;
     dob: Date;
-    nhsNo: string;  
+    nhsNo: string; 
+    gender: GenderEnum 
 }
 
 

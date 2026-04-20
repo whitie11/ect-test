@@ -1,4 +1,4 @@
-export enum Section {
+export enum SectionEnum {
     UNDEFINED= 'Please Select',
     INF = 'Informal',
     MCA = 'MCA',
@@ -8,7 +8,7 @@ export enum Section {
     S37 = 'Section 37'
 }
 
-export enum Consent {
+export enum ConsentEnum {
     UNDEFINED = 'Please Select',
     CONSENTING = 'Consenting',
     BEST_INTEREST = 'Best Interest',

@@ -10,7 +10,7 @@
   <option disabled selected>Select new stage</option>
 
   @for (stage of Stage | enumKeyValue; track stage.key) {
-    <option (click)="changeStage(stage.key)">{{stage.value}}</option>
+    <option (click)="changeStage(stage)">{{stage.value}}</option>
 }
 </select>
 </div>
@@ -22,6 +22,6 @@
         <button class="btn btn-secondary"  (click)="doCloseDialog()">Cancel</button>
         <button class="btn btn-primary w-24 disabled:cursor-not-allowed disabled:opacity-40" 
         [disabled]='stageSelector.value === "Select new stage" '
-        (click)=" saveNewChanges(stageSelector.value, txt.value)">Save</button>
+        (click)=" saveNewChanges(txt.value)">Save</button>
     </div>  
 

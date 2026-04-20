@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { AfterViewInit, Component, computed, EventEmitter, inject, Input, input, numberAttribute, Output, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, EventEmitter, inject, Input, input, numberAttribute, OnChanges, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { ReferralsService } from '../../.services/referrals/referrals-service';
 import { Router } from '@angular/router';
 import { ReferralRefResponse } from '../../.services/referrals/models/referral-ref-response';
@@ -9,12 +9,15 @@ import { DatePipe } from '@angular/common';
 import { CdkPortal, ComponentPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { NewApptDialog } from '../treatment/components/new-appt-dialog/new-appt-dialog';
-import { TreatmentStage } from '../../.enums/treatmentStage';
-import { Consent, Section } from '../../.enums/section';
+import { TreatmentStageEnum } from '../../.enums/treatmentStage';
+import { ConsentEnum, SectionEnum } from '../../.enums/section';
 import { ReferralStageUpdateDto } from '../../.services/referrals/models/referral-stage-update-dto';
-import { Stage } from '../../.enums/stage';
+import { StageEnum } from '../../.enums/stage';
 import { ClinicIdEnum } from '../../.enums/clinicIdEnum';
-
+import { ApptService } from '../../.services/appointments/appt-service';
+import { NewApptDTO } from '../../.dtos/newApptDTO';
+import { FuncsService} from '../../.utils/getEnumKeyByEnumValue';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-clinic',
@@ -27,20 +30,60 @@ import { ClinicIdEnum } from '../../.enums/clinicIdEnum';
   templateUrl: './clinic.html',
   styleUrl: './clinic.css',
 })
-export class Clinic {
-  private referralService = inject(ReferralsService);
-  private router = inject(Router);
 
+export class Clinic implements OnChanges {
+  private referralService = inject(ReferralsService);
+  private apptService = inject(ApptService);
+  private router = inject(Router);
+  private datePipe = inject(DatePipe);
   @Input()
   public clinicIdEnum = ClinicIdEnum.UNDEFINED
-  selectedClinic = computed(() => {
-    return this.clinicIdEnum
-  })
+  
+  
+
+  constructor(
+    private overlay: Overlay,
+    private funcsService: FuncsService,
+    
+  ) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if (changes['clinicIdEnum']) {
+      const newClinicId = changes['clinicIdEnum'].currentValue;
+      console.log('clinicIdEnum changed to:', newClinicId);
+      if (newClinicId == ClinicIdEnum.UNDEFINED) {
+        console.warn('Invalid clinicId input:', newClinicId);
+      }
+      else {
+        this.selectedClinic.set(newClinicId);
+        this.getClinicReferrals(newClinicId);
+        this.diaryStart.set(this.adjDate(new Date()))
+      }
+    }
+  }
+
+  ngOnInit() {
+    console.log('Clinic component initialized with clinicId:', this.clinicIdEnum);
+    if (this.clinicIdEnum == ClinicIdEnum.UNDEFINED) {
+      console.warn('Invalid clinicId input:', this.clinicIdEnum);
+    }
+    else {
+      this.getClinicReferrals(this.clinicIdEnum)
+      this.diaryStart.set(this.adjDate(new Date()))
+      this.getAllAppointments()
+    }
+
+  }
+
+
+
+  selectedClinic = signal<ClinicIdEnum>(this.clinicIdEnum);
 
   referrals = signal<ReferralRefResponse[]>([]);
   pendingReferrals = signal<ReferralRefResponse[]>([]);
 
-  diaryStart = signal<Date>(new Date())
+  diaryStart = signal<Date>(this.adjDate(new Date()));
 
   apptDate1 = computed(() => {
     let d = new Date(this.diaryStart())
@@ -50,8 +93,8 @@ export class Clinic {
   apptDate2 = computed(() => {
     let newDate = new Date(this.diaryStart())
     let day = newDate.getDay()
-    if (day == 2) {
-      //tue
+    if (day == 1 || day == 2) {
+      //mon or tue
       return new Date(newDate.setDate(newDate.getDate() + 3))
     }
     else return new Date(newDate.setDate(newDate.getDate() + 4))
@@ -65,46 +108,45 @@ export class Clinic {
   apptDate4 = computed(() => {
     let newDate = new Date(this.diaryStart())
     let day = newDate.getDay()
-    if (day == 2) {
-      //tue
+    if (day== 1 || day == 2) {
+      //mon or tue
       return new Date(newDate.setDate(newDate.getDate() + 10))
     }
     else return new Date(newDate.setDate(newDate.getDate() + 11))
   })
 
   apptListAll = signal<Appointment[]>([]);
-
   apptList1 = computed(() => {
 
     let x = this.apptListAll()
     let z = this.diaryStart()
-    let filtered = x.filter(t => this.apptDate1().toISOString() == t.date.toISOString())
+    console.log('apptListAll: ', x)
+    let y = this.apptDate1().toISOString()
+    console.log('diaryStart: ', this.diaryStart())
+    console.log('apptDate1: ', y)
+
+    let filtered = x.filter(t => this.apptDate1().toLocaleDateString() == (new Date(t.date).toLocaleDateString()))
     console.log('filtered: ', filtered)
     return filtered
   })
-
   apptList2 = computed(() => {
     let x = this.apptListAll()
     let y = this.apptDate2().toISOString()
     let z = this.diaryStart()
-    return this.apptListAll().filter(t => t.date.toISOString() == y)
+    return this.apptListAll().filter(t => this.apptDate2().toLocaleDateString() == (new Date(t.date).toLocaleDateString()))
   })
   apptList3 = computed(() => {
     let x = this.apptListAll()
     let y = this.apptDate3().toISOString()
     let z = this.diaryStart()
-    return this.apptListAll().filter((t) => t.date.toISOString() == y)
+    return this.apptListAll().filter(t => this.apptDate3().toLocaleDateString() == (new Date(t.date).toLocaleDateString()))
   })
   apptList4 = computed(() => {
     let x = this.apptListAll()
     let y = this.apptDate4().toISOString()
     let z = this.diaryStart()
-    return this.apptListAll().filter((t) => t.date.toISOString() == y)
+    return this.apptListAll().filter(t => this.apptDate4().toLocaleDateString() == (new Date(t.date).toLocaleDateString()))
   })
-
-
-
-  constructor(private overlay: Overlay) { }
 
   private overlayRef: OverlayRef | null = null;
 
@@ -144,17 +186,6 @@ export class Clinic {
 
   closeNewTreatmentDialog() {
     this.overlayRef?.detach();
-  }
-
-  ngOnInit() {
-    console.log('Clinic component initialized with clinicId:', this.clinicIdEnum);
-    if (this.clinicIdEnum == ClinicIdEnum.UNDEFINED) {
-      console.warn('Invalid clinicId input:', this.clinicIdEnum);
-    }
-    else {
-      this.getClinicReferrals(this.clinicIdEnum)
-      this.diaryStart.set(this.adjDate(new Date()))
-    }
   }
 
   getClinicReferrals(clinicIdEnum: ClinicIdEnum) {
@@ -215,166 +246,242 @@ export class Clinic {
     }
 
     if (event.container.id === 'list 1') {
-      // let data = event.previousIndex
-      // let ref = this.referrals()[data]
-      let itemAlreadyExist = this.apptList1().find(
-        item => item.date.toISOString() == this.apptDate1().toISOString()
-          && (ref.referralId == item.refId)
-      );
-      if (!itemAlreadyExist) {
-        const ts = this.showNewTreatmentDialog(ref, this.apptDate1(), 1)
+      if (!this.apptList1().some(item => item.referralId == ref.referralId)) {
+        const ts = this.showNewTreatmentDialog(ref, this.apptDate1(), 1);
       }
     }
+
+
     if (event.container.id === 'list 2') {
-      // let data = event.previousIndex
-      // let ref = this.referrals()[data]
-      let itemAlreadyExist = this.apptList2().find(
-        item => item.date.toISOString() == this.apptDate2().toISOString()
-          && (ref.referralId == item.refId)
-      );
-      if (!itemAlreadyExist) {
-        const ts = this.showNewTreatmentDialog(ref, this.apptDate2(), 2)
+      let itemCount= 0
+      let appList = this.apptList2() as unknown as Appointment[]
+      if (appList.length > 0) {
+        console.log('apptList2: ', appList)
+        appList.forEach(element2 => {
+         let  x = element2.referralId
+         console.log('x. = ', x)
+           if (x == ref.referralId) {
+            console.warn('Appointment already exists for this referral on this date');
+              itemCount++
+           }
+        });
+      }
+      if (itemCount == 0) {
+        const ts = this.showNewTreatmentDialog(ref, this.apptDate2(), 2);
       }
     }
-    if (event.container.id === 'list 3') {
-      // let data = event.previousIndex
-      // let ref = this.referrals()[data]
-      let itemAlreadyExist = this.apptList3().find(
-        item => item.date.toISOString() == this.apptDate3().toISOString()
-          && (ref.referralId == item.refId)
-      );
-      if (!itemAlreadyExist) {
-        const ts = this.showNewTreatmentDialog(ref, this.apptDate3(), 3)
+
+      if (event.container.id === 'list 3') {
+        if (!this.apptList3().some(item => item.date.toLocaleDateString() == this.apptDate3().toLocaleDateString() && item.referralId == ref.referralId)) {
+          const ts = this.showNewTreatmentDialog(ref, this.apptDate3(), 3);
+        }
+      }
+      if (event.container.id === 'list 4') {
+        if (!this.apptList4().some(item => item.date.toLocaleDateString() == this.apptDate4().toLocaleDateString() && item.referralId == ref.referralId)) {
+          const ts = this.showNewTreatmentDialog(ref, this.apptDate4(), 4);
+        }
       }
     }
-    if (event.container.id === 'list 4') {
-      // let data = event.previousIndex
-      // let ref = this.referrals()[data]
-      let itemAlreadyExist = this.apptList4().find(
-        item => item.date.toISOString() == this.apptDate4().toISOString()
-          && (ref.referralId == item.refId)
-      );
-      if (!itemAlreadyExist) {
-        const ts = this.showNewTreatmentDialog(ref, this.apptDate4(), 4)
-      }
+
+    showNewTreatmentDialog(ref: ReferralRefResponse, date: Date, list: number) {
+      this.newTreatmentDialog(ref, date)
     }
-  }
 
-  showNewTreatmentDialog(ref: ReferralRefResponse, date: Date, list: number) {
-    this.newTreatmentDialog(ref, date)
-  }
+    newTreatmentSession(
+      ref: ReferralRefResponse,
+      treatmentStage: TreatmentStageEnum,
+      treatmentNo: number,
+      date: Date,
+      section: SectionEnum,
+      consent: ConsentEnum,
+      location: string
+    ) {
 
-  newTreatmentSession(
-    ref: ReferralRefResponse,
-    treatmentStage: TreatmentStage,
-    treatmentNo: number,
-    date: Date,
-    section: Section,
-    consent: Consent,
-    location: string
-  ) {
+      // TO find if item in pending list and delete then add to treatment list
+      // Or update ref stage and reload referral lists
+      // referralService.updateReferralStage(ref: ReferralStageUpdateDto)  
+      // i.e getClinicReferrals(id: number) 
 
-    // TO find if item in pending list and delete then add to treatment list
-    // Or update ref stage and reload referral lists
-    // referralService.updateReferralStage(ref: ReferralStageUpdateDto)  
-    // i.e getClinicReferrals(id: number) 
-
-    if (this.clinicIdEnum == ClinicIdEnum.UNDEFINED) {
-      return
-    } else {
-
-      let currentStage = ''
-      let newStage = ''
-      if (this.clinicIdEnum == ClinicIdEnum.AVONDALE) {
-        currentStage = "ACCEPTED_P"
-        newStage = "TREATMENT_P"
+      if (this.clinicIdEnum == ClinicIdEnum.UNDEFINED) {
+        return
       } else {
-        currentStage = "ACCEPTED_B"
-        newStage = "TREATMENT_B"
+
+        let currentStage = ''
+        let newStage = ''
+        if (this.clinicIdEnum == ClinicIdEnum.AVONDALE) {
+          currentStage = "ACCEPTED_P"
+          newStage = "TREATMENT_P"  
+        } else {
+          currentStage = "ACCEPTED_B"
+          newStage = "TREATMENT_B"
+        }
+
+        let refUpdateData: ReferralStageUpdateDto = {
+          referralId: ref.referralId,
+          currentStage: currentStage,
+          newStage: newStage,
+          notes: "First Appointment"
+        };
+
+        this.referralService.updateReferralStage(refUpdateData)?.subscribe({
+          next: (data) => {
+            console.log('Referral Service updated successfully', data);
+            this.getClinicReferrals(this.clinicIdEnum)
+          },
+          error: (error) => {
+            console.error('Error updating referral service user:', error);
+          }
+        });
+
+        const newAppt: Appointment = {
+          clinic: this.clinicIdEnum,
+          referralId: ref.referralId,
+          date: date,
+          serviceUserId: ref.serviceUserId,
+          serviceUser: ref.serviceUser,
+          // firstName: ref.firstName,
+          // midName: ref.midName,
+          // lastName: ref.lastName,
+          // nhsNo: ref.nhsNo,
+          treatmentStage: treatmentStage,
+          treatmentNo: treatmentNo,
+          section: section,
+          consent: consent,
+          residing: location
+        }
+
+        this.apptListAll.update(values => [...values, newAppt]);
+
+        //TODO add to db
+        let newApptDTO: NewApptDTO = {
+          clinic: this.funcsService.getEnumKeyByEnumValue(ClinicIdEnum, this.clinicIdEnum) || '',
+          referralId: ref.referralId,
+          date: this.datePipe.transform(date,"yyyy-MM-dd") || '',
+          serviceUserId: ref.serviceUserId,
+          treatmentStage: this.funcsService.getEnumKeyByEnumValue(TreatmentStageEnum, treatmentStage) || '',
+          treatmentNo: treatmentNo,
+          section: this.funcsService.getEnumKeyByEnumValue(SectionEnum, section) || '',
+          consent: this.funcsService.getEnumKeyByEnumValue(ConsentEnum, consent) || '',
+          residing: location
+        };
+
+      let newApptString = JSON.stringify(newApptDTO)
+      console.log('New Appointment DTO: ', newApptDTO) 
+      console.log('New Appointment DTO Stringified: ', newApptString) 
+      this.saveApptToDb(newApptDTO) 
+      
       }
+    }
 
-      let refUpdateData: ReferralStageUpdateDto = {
-        referralId: ref.referralId,
-        currentStage: currentStage,
-        newStage: newStage,
-        notes: "First Appointment"
-      };
-
-      this.referralService.updateReferralStage(refUpdateData)?.subscribe({
+    saveApptToDb(apptDTO: NewApptDTO) {
+      this.apptService.saveAppt(apptDTO)?.subscribe({
         next: (data) => {
-          console.log('Referral Service updated successfully', data);
-          this.getClinicReferrals(this.clinicIdEnum)
+          console.log('Appointment saved successfully', data);
         },
         error: (error) => {
-          console.error('Error updating referral service user:', error);
+          console.error('Error saving appointment:', error);
         }
       });
+    }
 
-      const ts: Appointment = {
-        clinic: this.clinicIdEnum,
-        refId: ref.referralId,
-        date: date,
-        serviceUserId: ref.serviceUserId,
-        firstName: ref.firstName,
-        midName: ref.midName,
-        lastName: ref.lastName,
-        nhsNo: ref.nhsNo,
-        treatmentStage: treatmentStage,
-        treatmentNo: treatmentNo,
-        section: section,
-        consent: consent,
-        residing: location
+    getLastTreatmentData(refId: number) {
+
+    }
+
+    addDate() {
+      this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() + 1))))
+
+    }
+
+    subtractDate() {
+      this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() - 4))))
+
+    }
+
+    adjDate(date: Date) {
+      let newDate = new Date(date)
+      let day = newDate.getDay()
+      if (this.clinicIdEnum == ClinicIdEnum.AVONDALE) {
+        switch (day) {
+          case 0: //sun
+            newDate.setDate(newDate.getDate() + 2);
+            break;
+          case 1:
+            newDate.setDate(newDate.getDate() + 1);
+            break;
+          case 2:
+            newDate.setDate(newDate.getDate() + 0);
+            break;
+          case 3:
+            newDate.setDate(newDate.getDate() + 2);
+            break;
+          case 4:
+            newDate.setDate(newDate.getDate() + 1);
+            break;
+          case 5:
+            newDate.setDate(newDate.getDate() + 0);
+            break;
+          case 6:
+            newDate.setDate(newDate.getDate() + 3);
+            break;
+        }
+      } else if (this.clinicIdEnum == ClinicIdEnum.PENDLEVIEW) {
+        switch (day) {
+          case 0: //sun
+            newDate.setDate(newDate.getDate() + 1);
+            break;
+          case 1: //mon
+            newDate.setDate(newDate.getDate() + 0);
+            break;
+          case 2: //tue
+            newDate.setDate(newDate.getDate() + 2);
+            break;
+          case 3: //wed
+            newDate.setDate(newDate.getDate() + 1);
+            break;
+          case 4: //thu
+            newDate.setDate(newDate.getDate() + 4);
+            break;
+          case 5: //fri
+            newDate.setDate(newDate.getDate() + 3);
+            break;
+          case 6: //sat
+            newDate.setDate(newDate.getDate() + 2);
+            break;
+        }
       }
-
-      this.apptListAll.update(values => [...values, ts]);
-
-      //TODO add to db
+      return newDate
     }
-  }
 
-  getLastTreatmentData(refId: number) {
-
-  }
-
-  addDate() {
-    this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() + 1))))
-
-  }
-
-  subtractDate() {
-    this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() - 4))))
-
-  }
-
-  adjDate(date: Date) {
-    let newDate = new Date(date)
-    let day = newDate.getDay()
-    switch (day) {
-      case 0:
-        newDate.setDate(newDate.getDate() + 2);
-        break;
-      case 1:
-        newDate.setDate(newDate.getDate() + 1);
-        break;
-      case 2:
-        newDate.setDate(newDate.getDate() + 0);
-        break;
-      case 3:
-        newDate.setDate(newDate.getDate() + 2);
-        break;
-      case 4:
-        newDate.setDate(newDate.getDate() + 1);
-        break;
-      case 5:
-        newDate.setDate(newDate.getDate() + 0);
-        break;
-      case 6:
-        newDate.setDate(newDate.getDate() + 3);
-        break;
+    getAllAppointments() {
+      this.apptService.getAllAppointments().subscribe({
+        next: (data) => {
+          console.log('Apptsfetched successfully', data);
+          const res: Appointment[] = JSON.parse(JSON.stringify(data));
+          let apptArray: Appointment[] = []
+          
+          res.forEach((appt: Appointment) => {
+          let newAppt: Appointment = {
+            referralId: appt.referralId,
+            date: new Date(appt.date),
+            clinic: ClinicIdEnum[appt.clinic as unknown as keyof typeof ClinicIdEnum] || ClinicIdEnum.UNDEFINED,
+            serviceUserId: appt.serviceUserId,
+            serviceUser: appt.serviceUser,
+            treatmentStage: TreatmentStageEnum[appt.treatmentStage as unknown as keyof typeof TreatmentStageEnum] || TreatmentStageEnum.UNKNOWN,
+            treatmentNo: appt.treatmentNo,
+            section:  SectionEnum[appt.section as unknown as keyof typeof SectionEnum] || SectionEnum.UNDEFINED,
+            consent:    ConsentEnum[appt.consent as unknown as keyof typeof ConsentEnum] || ConsentEnum.UNDEFINED,
+            residing:   appt.residing
+          }
+          apptArray.push(newAppt)
+        }),
+          this.apptListAll.set(apptArray)
+        },
+        error: (error) => {
+          console.error('Error fetching referrals:', error);
+        }
+      });
     }
-    return newDate
+
+
   }
-
-}
-
-

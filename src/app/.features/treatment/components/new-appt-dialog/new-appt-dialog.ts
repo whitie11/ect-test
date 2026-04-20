@@ -1,8 +1,8 @@
 import { Component, computed, EventEmitter, Output, signal } from '@angular/core';
 import { ReferralRefResponse } from '../../../../.services/referrals/models/referral-ref-response';
-import {Consent, Section} from '../../../../.enums/section'
+import {ConsentEnum, SectionEnum} from '../../../../.enums/section'
 import { DatePipe } from '@angular/common';
-import { TreatmentStage } from '../../../../.enums/treatmentStage';
+import { TreatmentStageEnum } from '../../../../.enums/treatmentStage';
 
   
 @Component({
@@ -17,11 +17,11 @@ export class NewApptDialog {
   @Output() closeDialog = new EventEmitter();
   @Output() saveChanges = new EventEmitter<{
     ref: ReferralRefResponse;
-    treatmentStage: TreatmentStage;
+    treatmentStage: TreatmentStageEnum;
     treatmentNo: number;
     date: Date;
-    section: Section;
-    consent: Consent;
+    section: SectionEnum;
+    consent: ConsentEnum;
     location: string
   }>();
 
@@ -30,26 +30,26 @@ ref = signal<ReferralRefResponse | null>(null);
 date = signal<Date| null>(null)
 list = signal<number>(0)
 
-SectionEnum = Section;
+SectionEnum = SectionEnum;
 sectionOptions = Object.values(this.SectionEnum)
-ConsentEnum = Consent;
+ConsentEnum = ConsentEnum;
 consentOptions = Object.values(this.ConsentEnum)
-treatmentStageEnum = TreatmentStage
+treatmentStageEnum = TreatmentStageEnum
 treatmentStageOptions = Object.values(this.treatmentStageEnum)
 
 
-treatmentStage = signal<TreatmentStage>(this.treatmentStageEnum.UNKNOWN)
+treatmentStage = signal<TreatmentStageEnum>(this.treatmentStageEnum.UNKNOWN)
 treatmentNo = signal<number>(0)
-section = signal<Section>(Section.UNDEFINED)
-consent = signal<Consent>(Consent.UNDEFINED)
+section = signal<SectionEnum>(SectionEnum.UNDEFINED)
+consent = signal<ConsentEnum>(ConsentEnum.UNDEFINED)
 location = signal<string>('')
 
 formNotValid = computed(() => {
   if(
-    this.treatmentStage() == TreatmentStage.UNKNOWN
+    this.treatmentStage() == TreatmentStageEnum.UNKNOWN
     || this.treatmentNo()<1 
-    || this.section() == Section.UNDEFINED
-    || this.consent() == Consent.UNDEFINED
+    || this.section() == SectionEnum.UNDEFINED
+    || this.consent() == ConsentEnum.UNDEFINED
     || this.location() == ''
   ){
     return true
@@ -62,7 +62,7 @@ formNotValid = computed(() => {
     this.closeDialog.emit();
   }
 
-  updateTreatmentStage(t: TreatmentStage){this.treatmentStage.set(t)}
+  updateTreatmentStage(t: TreatmentStageEnum){this.treatmentStage.set(t)}
   updateTreatmentNo(n: any){
     let x = n
     if(!isNaN(n) && n !='') {
@@ -70,8 +70,8 @@ formNotValid = computed(() => {
     }
   }
    
-  updateSection(s: Section){this.section.set(s)}
-  updateConsent(c: Consent){this.consent.set(c)}
+  updateSection(s: SectionEnum){this.section.set(s)}
+  updateConsent(c: ConsentEnum){this.consent.set(c)}
   updateLocation(l: string){this.location.set(l)}
 
   onSubmit(){

@@ -1,4 +1,4 @@
-export enum Stage {
+export enum StageEnum {
     NOT_ALLOCATED = 'New Referral',
     PENDING = 'Pending update',
     WAITING = 'Waiting for appointment',

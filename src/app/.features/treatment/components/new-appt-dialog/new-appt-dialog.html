@@ -1,9 +1,9 @@
 <div class="card bg-blue-100 text-black shadow-xl ">
     <div class="card-body min-w-180 overflow-auto">
         <h2 class="card-title">Add New Treatment Session for
-            {{ref()?.firstName}}
-            {{ref()?.midName}}
-            {{ref()?.lastName}}
+            {{ref()?.serviceUser?.firstname}}
+            {{ref()?.serviceUser?.midname}}
+            {{ref()?.serviceUser?.lastname}}
             on {{date() | date: 'EEE dd/MM/yyyy'}}
         </h2>
 

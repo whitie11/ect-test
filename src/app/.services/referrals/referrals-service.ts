@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ReferralRefResponse } from './models/referral-ref-response';
 import { ReferralSuResponse } from './models/referral-su-response';
 import { ReferralStageUpdateDto } from './models/referral-stage-update-dto';
-import { Stage } from '../../.enums/stage';
+import { StageEnum } from '../../.enums/stage';
 
 @Injectable({
   providedIn: 'root',

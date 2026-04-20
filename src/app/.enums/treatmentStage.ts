@@ -1,4 +1,4 @@
-export enum TreatmentStage {
+export enum TreatmentStageEnum {
     UNKNOWN = '',
     ACUTE = "Acute",
     CONTINUATION = "Continuation",
