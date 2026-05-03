@@ -18,6 +18,7 @@ import { ApptService } from '../../.services/appointments/appt-service';
 import { NewApptDTO } from '../../.dtos/newApptDTO';
 import { FuncsService} from '../../.utils/getEnumKeyByEnumValue';
 import { CommonModule } from '@angular/common';
+import { DiaryCard } from './components/diary-card/diary-card';   
 
 @Component({
   selector: 'app-clinic',
@@ -25,7 +26,8 @@ import { CommonModule } from '@angular/common';
     CdkDrag,
     CdkDropList,
     ReferralRef,
-    DatePipe
+    DatePipe,
+    DiaryCard
   ],
   templateUrl: './clinic.html',
   styleUrl: './clinic.css',
@@ -306,20 +308,20 @@ export class Clinic implements OnChanges {
         return
       } else {
 
-        let currentStage = ''
-        let newStage = ''
+        let currentStage = StageEnum.UNKNOWN
+        let newStage = StageEnum.UNKNOWN
         if (this.clinicIdEnum == ClinicIdEnum.AVONDALE) {
-          currentStage = "ACCEPTED_P"
-          newStage = "TREATMENT_P"  
+          currentStage = StageEnum.ACCEPTED_B
+          newStage =  StageEnum.TREATMENT_P  
         } else {
-          currentStage = "ACCEPTED_B"
-          newStage = "TREATMENT_B"
+          currentStage = StageEnum.ACCEPTED_B
+          newStage = StageEnum.TREATMENT_B
         }
 
         let refUpdateData: ReferralStageUpdateDto = {
           referralId: ref.referralId,
-          currentStage: currentStage,
-          newStage: newStage,
+          currentStage: Object.keys(StageEnum)[Object.values(StageEnum).indexOf(currentStage)],
+          newStage: Object.keys(StageEnum)[Object.values(StageEnum).indexOf(newStage)],
           notes: "First Appointment"
         };
 
@@ -334,15 +336,12 @@ export class Clinic implements OnChanges {
         });
 
         const newAppt: Appointment = {
+          id: 0, // This will be set by the backend when saved to the database
           clinic: this.clinicIdEnum,
           referralId: ref.referralId,
           date: date,
           serviceUserId: ref.serviceUserId,
           serviceUser: ref.serviceUser,
-          // firstName: ref.firstName,
-          // midName: ref.midName,
-          // lastName: ref.lastName,
-          // nhsNo: ref.nhsNo,
           treatmentStage: treatmentStage,
           treatmentNo: treatmentNo,
           section: section,
@@ -352,7 +351,6 @@ export class Clinic implements OnChanges {
 
         this.apptListAll.update(values => [...values, newAppt]);
 
-        //TODO add to db
         let newApptDTO: NewApptDTO = {
           clinic: this.funcsService.getEnumKeyByEnumValue(ClinicIdEnum, this.clinicIdEnum) || '',
           referralId: ref.referralId,
@@ -394,7 +392,7 @@ export class Clinic implements OnChanges {
     }
 
     subtractDate() {
-      this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() - 4))))
+      this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() - 5))))
 
     }
 
@@ -462,6 +460,7 @@ export class Clinic implements OnChanges {
           
           res.forEach((appt: Appointment) => {
           let newAppt: Appointment = {
+            id: appt.id,
             referralId: appt.referralId,
             date: new Date(appt.date),
             clinic: ClinicIdEnum[appt.clinic as unknown as keyof typeof ClinicIdEnum] || ClinicIdEnum.UNDEFINED,

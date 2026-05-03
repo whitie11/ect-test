@@ -4,6 +4,7 @@ import { ReferralRefResponse } from '../../.services/referrals/models/referral-r
 import { ReferralRef } from './referral-ref/referral-ref';
 import { ReferralDetails } from './referral-details/referral-details';
 import { Router } from '@angular/router';
+import { StageEnum } from '../../.enums/stage';
 
 
 @Component({
@@ -46,14 +47,38 @@ refTreatB = signal<ReferralRefResponse[]>([]);
 
         console.log('Referrals fetched successfully', data);
         const res = JSON.parse(JSON.stringify(data)).referrals;
-        this.referrals.set(res);
-        this.refPending.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'PENDING'));
-        this.refNotAllocated.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'NOT_ALLOCATED'));
-        this.refWaiting.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'WAITING'));
-        this.refP.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'ACCEPTED_P'));
-        this.refB.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'ACCEPTED_B'));
-        this.refTreatP.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'TREATMENT_P'));
-        this.refTreatB.set(res.filter((ref: ReferralRefResponse) => ref.stage === 'TREATMENT_B'));
+        let refArray: ReferralRefResponse[] = [];
+        res.forEach((ref: ReferralRefResponse) => {
+          let newRef: ReferralRefResponse = {
+            referralId: ref.referralId,
+            serviceUserId: ref.serviceUserId,
+            serviceUser: ref.serviceUser,
+            dateReferred: ref.dateReferred,
+            stage: StageEnum[ref.stage as unknown as keyof typeof StageEnum] || StageEnum.UNKNOWN,
+            reason: ref.reason
+          };  
+          refArray.push(newRef);
+        });
+
+        this.referrals.set(refArray);
+        this.refPending.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.PENDING));
+        this.refNotAllocated.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.NOT_ALLOCATED));
+        this.refWaiting.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.WAITING));
+        this.refP.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.ACCEPTED_P));
+        this.refB.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.ACCEPTED_B));
+        this.refTreatP.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.TREATMENT_P));
+        this.refTreatB.set(refArray.filter((ref: ReferralRefResponse) => ref.stage === StageEnum.TREATMENT_B));
+        let x = this.referrals();
+        console.log('Referrals after setting signals:', x);
+        console.log('Referrals after filtering:', {
+          pending: this.refPending(),
+          notAllocated: this.refNotAllocated(),
+          waiting: this.refWaiting(),
+          acceptedP: this.refP(),
+          acceptedB: this.refB(),
+          treatmentP: this.refTreatP(),
+          treatmentB: this.refTreatB()
+        });
       },
       error: (error) => {
         console.error('Error fetching referrals:', error);

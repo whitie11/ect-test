@@ -1,3 +1,4 @@
+import { StageEnum } from "../../../.enums/stage";
 import { ServiceUser } from "../../../.models/service-user";
 
 export interface ReferralSuResponse {
@@ -7,7 +8,7 @@ export interface ReferralSuResponse {
     serviceUserId: number;
     serviceUser: ServiceUser;
     reason: string;
-    stage: string;
+    stage: StageEnum;
     isOpen: boolean;
     dateReferred: Date;
     dateClosed: Date | null;

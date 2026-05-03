@@ -1,14 +1,11 @@
+import { StageEnum } from "../../../.enums/stage";
 import { ServiceUser } from "../../../.models/service-user";
 
 export interface ReferralRefResponse {
     referralId: number;
     serviceUserId: number;
-     serviceUser: ServiceUser;
-    // firstName: string;
-    // midName: string;
-    // lastName: string;
-    // nhsNo: string;
-    stage: string;
+    serviceUser: ServiceUser;
+    stage: StageEnum;
     reason: string;
     dateReferred: Date;
 }

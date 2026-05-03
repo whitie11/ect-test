@@ -46,27 +46,16 @@
                     d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
             </svg>
         </div>
-        
+
         <div class="flex flex-row w-full h-full">
             <span class="hidden md:block bg-red-100 flex-1  justify-center items-center overflow-auto " cdkDropList
                 #listOne="cdkDropList" id="list 1" (cdkDropListDropped)="drop($event)">
 
-                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate1() | date: 'EEE dd/MM/yyyy'}} </h3>
+                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate1() | date: 'EEE dd/MM/yyyy'}} [{{apptList1().length}}]</h3>
                 <div>
                     <ul class="space-y-4 mx-1.5">
                         @for (appt of apptList1(); track appt.referralId) {
-                        <div>
-                            <li>
-                                <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1 ">
-                                    <span> {{appt.serviceUser.firstname}}
-                                        {{appt.serviceUser.midname}}
-                                        {{appt.serviceUser.lastname}} </span>
-                                    <span>{{appt.treatmentStage}} {{appt.treatmentNo}}</span>
-                                    <span>{{appt.section}} : {{appt.consent}}</span>
-                                    <span>Residing: {{appt.residing}}</span>
-                                </h3>
-                            </li>
-                        </div>
+                        <app-diary-card [appt]="appt"></app-diary-card>
                         }
                     </ul>
                 </div>
@@ -76,47 +65,24 @@
             <span class="hidden md:block bg-red-100 flex-1 justify-center items-center overflow-auto " cdkDropList
                 #listTwo="cdkDropList" id="list 2" (cdkDropListDropped)="drop($event)">
 
-                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate2() | date: 'EEE dd/MM/yyyy'}} </h3>
+                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate2() | date: 'EEE dd/MM/yyyy'}} [{{apptList2().length}}] </h3>
                 <div>
                     <ul class="space-y-4 mx-1.5">
                         @for (appt of apptList2(); track appt.referralId) {
-                        <div>
-                            <li>
-                                <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1 ">
-                                    <span> {{appt.serviceUser.firstname}}
-                                        {{appt.serviceUser.midname}}
-                                        {{appt.serviceUser.lastname}} </span>
-                                    <span>{{appt.treatmentStage}} {{appt.treatmentNo}}</span>
-                                    <span>{{appt.section}} : {{appt.consent}}</span>
-                                    <span>Residing: {{appt.residing}}</span>
-                                </h3>
-                            </li>
-                        </div>
+                        <app-diary-card [appt]="appt"></app-diary-card>
                         }
-                    </ul>
-                </div>
-
+                     </ul>
+                </div>    
             </span>
 
             <span class="hidden md:block bg-red-100 flex-1 justify-center items-center overflow-auto " cdkDropList
                 #listThree="cdkDropList" id="list 3" (cdkDropListDropped)="drop($event)">
 
-                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate3() | date: 'EEE dd/MM/yyyy'}} </h3>
+                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate3() | date: 'EEE dd/MM/yyyy'}} [{{apptList3().length}}] </h3>
                 <div>
                     <ul class="space-y-4 mx-1.5">
                         @for (appt of apptList3(); track appt.referralId) {
-                        <div>
-                            <li>
-                                <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1">
-                                    <span> {{appt.serviceUser.firstname}}
-                                        {{appt.serviceUser.midname}}
-                                        {{appt.serviceUser.lastname}} </span>
-                                    <span>{{appt.treatmentStage}} {{appt.treatmentNo}}</span>
-                                    <span>{{appt.section}} :{{appt.consent}}</span>
-                                    <span>Residing: {{appt.residing}}</span>
-                                </h3>
-                            </li>
-                        </div>
+                        <app-diary-card [appt]="appt"></app-diary-card>
                         }
                     </ul>
                 </div>
@@ -126,26 +92,14 @@
             <span class="hidden md:block bg-red-100 flex-1 justify-center items-center overflow-auto " cdkDropList
                 #listFour="cdkDropList" id="list 4" (cdkDropListDropped)="drop($event)">
 
-                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate4() | date: 'EEE dd/MM/yyyy'}} </h3>
+                <h3 class=" bg-blue-600 text-white text-center my-0">{{apptDate4() | date: 'EEE dd/MM/yyyy'}} [{{apptList4().length}}] </h3>
                 <div>
                     <ul class="space-y-4 mx-1.5">
                         @for (appt of apptList4(); track appt.referralId) {
-                        <div>
-                            <li>
-                                <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1">
-                                    <span> {{appt.serviceUser.firstname}}
-                                        {{appt.serviceUser.midname}}
-                                        {{appt.serviceUser.lastname}} </span>
-                                    <span>{{appt.treatmentStage}} {{appt.treatmentNo}}</span>
-                                    <span>{{appt.section}} : {{appt.consent}}</span>
-                                    <span>Residing: {{appt.residing}}</span>
-                                </h3>
-                            </li>
-                        </div>
+                        <app-diary-card [appt]="appt"></app-diary-card>
                         }
                     </ul>
                 </div>
-
             </span>
 
         </div>

@@ -9,6 +9,7 @@ import { authGuard } from './.services/auth/auth-guard';
 import { Admin } from './.features/admin/admin';
 import { NewReferral } from './.features/referrals/new-referral/new-referral';
 import { Clinic } from './.features/clinic/clinic';
+import { Treatment } from './.features/treatment/treatment';
 
 
 export const routes: Routes = [
@@ -65,6 +66,12 @@ export const routes: Routes = [
                 component: PageNotBuilt,
                 canActivate: [authGuard],
                 data: { roles: ['ADMIN'], pageName: 'Admin' }
+            },
+            {
+                path: 'treatment/:apptId',
+                component: Treatment,
+                canActivate: [authGuard],
+                data: { roles: ['ADMIN', 'USER']}
             },
 
         ]

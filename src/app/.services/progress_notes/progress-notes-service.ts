@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { ProgressNotesResponse } from './models/progress_notes_response';
+import { NewNoteDTO } from '../../.dtos/newNoteDTO';
 
 
 @Injectable({
@@ -19,4 +20,8 @@ export class ProgressNotesService {
    getNotesForReferral(id: number): Observable<ProgressNotesResponse[]> {
     return this.http.get<ProgressNotesResponse[]>(this.apiRoot.concat(`progress_notes_referral/${id}`));
    }
-}
+
+   addNoteReferral(newNote: NewNoteDTO): Observable<number> {
+    return this.http.post<number>(this.apiRoot.concat("/progress_notes_referral/add"),newNote)
+   }
+  }

@@ -1,4 +1,5 @@
 export enum StageEnum {
+    UNKNOWN = 'Unknown',
     NOT_ALLOCATED = 'New Referral',
     PENDING = 'Pending update',
     WAITING = 'Waiting for appointment',

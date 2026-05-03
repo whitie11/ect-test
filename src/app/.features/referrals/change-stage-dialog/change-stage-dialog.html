@@ -9,19 +9,28 @@
 <select class="select select-primary" #stageSelector>
   <option disabled selected>Select new stage</option>
 
-  @for (stage of Stage | enumKeyValue; track stage.key) {
-    <option (click)="changeStage(stage)">{{stage.value}}</option>
+  @for (stage of Stage; track stage) {
+    <option (click)="changeStage(stage)">{{stage.valueOf()}}</option>
 }
 </select>
 </div>
 <h2 class="card-subtitle">Comments</h2>
-<textarea class="textarea min-w-full h-64 max-h-64 overflow-auto"  #txt></textarea>
+
+
+<!-- <textarea class="textarea min-w-full h-64 max-h-64 overflow-auto"  #txt></textarea> -->
+      <div class="NgxEditor__Wrapper">
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+        <ngx-editor [editor]="editor" [(ngModel)]="editordoc" [disabled]="false"
+          [placeholder]="'Type here...'"></ngx-editor>
+      </div>
+
+
       </div>
       
       <div class="card-footer flex space-x-1 justify-end my-1.5  mx-6">
         <button class="btn btn-secondary"  (click)="doCloseDialog()">Cancel</button>
         <button class="btn btn-primary w-24 disabled:cursor-not-allowed disabled:opacity-40" 
         [disabled]='stageSelector.value === "Select new stage" '
-        (click)=" saveNewChanges(txt.value)">Save</button>
+        (click)=" saveNewChanges(editordoc)">Save</button>
     </div>  
 

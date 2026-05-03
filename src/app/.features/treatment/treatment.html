@@ -1,1 +1,27 @@
-<p>treatment works!</p>
+
+@if(appt()){
+<div>
+    <li>
+        <h3 class="flex flex-row bg-blue-600 text-white justify-between px-5">
+            <span>Clinic: {{appt()?.clinic}} Date: {{appt()?.date | date: 'dd/MM/yyyy'}} </span>
+            <span> {{appt()?.serviceUser?.firstname}} 
+                {{appt()?.serviceUser?.midname}} 
+                {{appt()?.serviceUser?.lastname}} 
+                DoB: {{appt()?.serviceUser?.dob | date: 'dd/MM/yyyy'}} Age: {{appt()?.serviceUser?.dob | age}} </span>
+            <span> NHS.no: {{appt()?.serviceUser?.nhsNo}} </span>
+            <span> Treatment No: {{appt()?.treatmentStage}} {{appt()?.treatmentNo}} </span>
+             <span> Legal Status:{{appt()?.section}} :{{appt()?.consent}} </span>
+         <span>Residing: {{appt()?.residing}}</span>
+        </h3>
+    </li>
+</div>
+}
+@else {
+<div>
+    <li>
+        <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1">
+            <span> No Appointment information available </span>
+        </h3>
+    </li>
+</div>
+}

@@ -1,0 +1,20 @@
+<div class="card bg-base-100 shadow-xl ">
+  <div class="card-body min-w-180 overflow-auto">
+    <h2 class="card-title">Update Progess Notes</h2>
+    <div class="divider"></div>
+    <div class="flex flex-col gap-1">
+
+      <div class="NgxEditor__Wrapper">
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+        <ngx-editor [editor]="editor" [(ngModel)]="editordoc" [disabled]="false"
+          [placeholder]="'Type here...'"></ngx-editor>
+      </div>
+
+
+      <div class="card-footer flex space-x-1 justify-end my-1.5  mx-6">
+        <button class="btn btn-secondary" (click)="doCloseDialog()">Cancel</button>
+        <button class="btn btn-primary w-24 disabled:cursor-not-allowed disabled:opacity-40"
+          [disabled]='editordoc.length <8' (click)=" saveNote(editordoc)">Save</button>
+      </div>
+
+    </div>

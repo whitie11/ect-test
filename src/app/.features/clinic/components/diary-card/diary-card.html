@@ -1,0 +1,23 @@
+@if(appt){
+<div (click)="doTreatment(appt.id)">
+    <li>
+        <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1">
+            <span> {{appt.serviceUser.firstname}}
+                {{appt.serviceUser.midname}}
+                {{appt.serviceUser.lastname}} </span>
+            <span>{{appt.treatmentStage}} {{appt.treatmentNo}}</span>
+            <span>{{appt.section}} :{{appt.consent}}</span>
+            <span>Residing: {{appt.residing}}</span>
+        </h3>
+    </li>
+</div>
+}
+@else {
+<div>
+    <li>
+        <h3 class="flex flex-col bg-blue-600 text-white justify-between my-1 pl-1">
+            <span> No Appointment information available </span>
+        </h3>
+    </li>
+</div>
+}
