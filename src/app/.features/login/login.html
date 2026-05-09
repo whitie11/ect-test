@@ -25,7 +25,7 @@
 </form> -->
 
 <div class="text-gray-700 min-h-screen flex flex-col items-center justify-center">
-  
+
 
 
   <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
@@ -47,6 +47,7 @@
         </p>
         }
       </div>
+      
       <div class="mb-6">
         <label class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
 
@@ -90,9 +91,9 @@
       </svg>
     </div>
 
-<div [hidden]="!errorMsg().active" class="flex justify-center mt-4">
-  <p class="text-red-500">{{ errorMsg().message }}</p>
-</div>
+    <div [hidden]="!errorMsg().active" class="flex justify-center mt-4">
+      <p class="text-red-500">{{ errorMsg().message }}</p>
+    </div>
 
 
   </div>

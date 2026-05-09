@@ -32,8 +32,8 @@ list = signal<number>(0)
 
 SectionEnum = SectionEnum;
 sectionOptions = Object.values(this.SectionEnum)
-ConsentEnum = ConsentEnum;
-consentOptions = Object.values(this.ConsentEnum)
+consentEnum = ConsentEnum;
+consentOptions = Object.values(this.consentEnum)
 treatmentStageEnum = TreatmentStageEnum
 treatmentStageOptions = Object.values(this.treatmentStageEnum)
 

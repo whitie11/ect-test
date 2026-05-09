@@ -10,27 +10,27 @@ import { NewApptDTO } from '../../.dtos/newApptDTO';
 })
 export class ApptService {
 
-     constructor(
+  constructor(
     private http: HttpClient,
   ) { }
-  
-   apiRoot = environment.apiRoot;
 
-   getAllAppointments():  Observable<Appointment[]> {
-     return this.http.get<Appointment[]>(this.apiRoot.concat(`/appts/get_all`));
-   }
+  apiRoot = environment.apiRoot;
 
-   getAppt(id: number): Observable<Appointment> {
-     return this.http.get<Appointment>(this.apiRoot.concat(`/appts/get_appointment/${id}`));
-   }
+  getAllAppointments(): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(this.apiRoot.concat(`/appts/get_all`));
+  }
 
-   saveAppt(appt: NewApptDTO) : Observable<Appointment> | null{
-      try {
-      let data =  this.http.post<Appointment>(this.apiRoot.concat(`appts/new_appt`), appt);
+  getAppt(id: number): Observable<Appointment> {
+    return this.http.get<Appointment>(this.apiRoot.concat(`/appts/get_appointment/${id}`));
+  }
+
+  saveAppt(appt: NewApptDTO): Observable<Appointment> | null {
+    try {
+      let data = this.http.post<Appointment>(this.apiRoot.concat(`appts/new_appt`), appt);
       return data
-     } catch (error) {
-       return null
-      } 
-     
-     }
+    } catch (error) {
+      return null
+    }
+
+  }
 }

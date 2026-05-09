@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, HostBinding, inject, input, Input, Output, Signal, signal, ViewChild } from '@angular/core';
+import { Component, computed, EventEmitter, inject, input, Output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ReferralSuResponse } from '../../../.services/referrals/models/referral-su-response';
 import { ReferralsService } from '../../../.services/referrals/referrals-service';
@@ -46,7 +46,6 @@ export class ReferralDetails {
   }
 
   changeStageDialog() {
-    // const target = document.getElementById('changeStageButton');
     const target = document.querySelector("#changeStageButton") as HTMLElement;
     this.overlayRef = this.overlay.create({
       hasBackdrop: true,

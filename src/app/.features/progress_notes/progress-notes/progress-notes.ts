@@ -13,7 +13,7 @@ import { ReferralSuResponse } from '../../../.services/referrals/models/referral
 export class ProgressNotes {
 @Input({ required: true }) selectedReferralId!:  Signal<number>;
 // @Input({ required: true }) selectedReferral!:  Signal<ReferralSuResponse | null>;
-@Input({ required: true }) refreshNotes!: Signal<boolean> 
+@Input({ required: true }) refreshNotes!: Signal<boolean>;
 
 private notesService = inject(ProgressNotesService);
 

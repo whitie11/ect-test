@@ -1,0 +1,140 @@
+<div class="card  ">
+
+  <div class="card-body ">
+    <span class="card-title text-2xl justify-center">Find or Save Service User!</span>
+            @if (stateFlags().searching()) {
+           <div class="card-title text-2xl justify-center">
+        <p>Searching...</p>
+         </div>
+        }
+    @if(!validNHS()){
+        <div class=" flex flex-row gap-5 items-start ">
+          <span class="card-title "> Input NHS number to search for Service User or create new record if none found</span>
+          <input type="text" [value]="serviceUserQueryNHS()" (input)="serviceUserQueryNHS.set($event.target.value)"
+            (keypress)="($event.charCode >= 48 && $event.charCode < 58)"
+            class=" p-2 border rounded-lg focus:outline-none focus:border-blue-400" />
+          <button [disabled]="serviceUserQueryNHS().length !==10" (click)="checkNHS()" class="btn btn-primary w-auto ml-1.5">Search</button>
+        </div>
+    }
+
+  @if(validNHS()){
+
+  @if (stateFlags().serviceUserFound()) {
+  <p>Service User Found!</p>
+  <div class=" flex flex-row items-start">
+    <span class="card-title ">
+      Service User: {{ serviceUser()?.firstname }} {{
+      serviceUser()?.midname }} {{serviceUser()?.lastname}}
+    </span>
+    <span class="card-title ">
+      DoB: {{serviceUser()?.dob | date: 'dd/MM/yyyy'}}
+    </span>
+    <span class="card-title ">
+      NHSno:
+      {{serviceUser()?.nhsNo}}
+    </span>
+  </div>
+  @if (stateFlags().referralOpenForSU()) {<p class="text-red-500">Referral is open for this Service User</p>}
+      <div class="flex justify-center gap-5">
+      <button class="btn btn-secondary justify-center" type="button" (click)="resetForm()">Cancel</button>
+      <button  class="btn btn-primary justify-center"type="button">Create Referral</button>
+    </div>
+
+}
+
+  @if(stateFlags().canGetSUdetails()){
+    <p class="flex card-title justify-center ">Service User not found</p>
+  <p class="flex card-title justify-center ">Enter Service User Details to add to Database</p>
+<div class="flex flex-row mb-4 items-center justify-center">
+      <label class="m-2 font-semibold">NHS number</label>
+      <span class="p-2 border rounded-lg">{{serviceUserQueryNHS()}}</span>
+</div>
+  <form (submit)="onSubmit($event)" class=" group" novalidate justify-center w-full>
+
+    <div class="flex flex-row mb-4 items-center justify-center ">
+      <label class=" font-semibold mb-2">Firstname</label>
+      <input type="text" [formField]="serviceUserForm.firstname" class=" m-2  px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ serviceUserForm.firstname().touched() && serviceUserForm.firstname().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }} " placeholder="Enter firstname">
+
+      @if (serviceUserForm.firstname().touched() && serviceUserForm.firstname().invalid()) {
+      <ul class="mt-1 text-xs text-red-500">
+        @for (error of serviceUserForm.firstname().errors(); track $index) {
+        <li>{{ error.message }}</li>
+        }
+      </ul>
+      }
+    </div>
+
+    <div class="flex flex-row mb-4 items-center justify-center ">
+      <label class="font-semibold mb-2">Middle name</label>
+      <input type="text" [formField]="serviceUserForm.midname" class=" m-2 px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ serviceUserForm.midname().touched() && serviceUserForm.midname().invalid() }} 
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }} " placeholder="Enter middle name">
+    </div>
+
+    <div class="flex flex-row mb-4 items-center justify-center ">
+      <label class="font-semibold mb-2">Last name</label>
+      <input type="text" [formField]="serviceUserForm.lastname" class="m-2  px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ serviceUserForm.lastname().touched() && serviceUserForm.lastname().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }} " placeholder="Enter last name">
+
+      @if (serviceUserForm.lastname().touched() && serviceUserForm.lastname().invalid()) {
+      <ul class="mt-1 text-xs text-red-500">
+        @for (error of serviceUserForm.lastname().errors(); track $index) {
+        <li>{{ error.message }}</li>
+        }
+      </ul>
+      }
+    </div>
+
+    <div class="flex flex-row mb-4 items-center justify-center ">
+      <label class=" font-semibold mb-2">Date of Birth</label>
+      <input type="date" class="m-2  px-4 py-2 border rounded-lg
+       {{ serviceUserForm.dob().touched() && serviceUserForm.dob().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }}" [formField]="serviceUserForm.dob" />
+
+      @if (serviceUserForm.dob().touched() && serviceUserForm.dob().invalid()) {
+       <ul class="mt-1 text-xs text-red-500">
+        @for (error of serviceUserForm.dob().errors(); track $index) {
+        <li>{{ error.message }}</li>
+        }
+      </ul>
+      }
+    </div>
+
+    <div class="flex flex-row mb-4 items-center justify-center ">
+      <label class=block mb-2.5 font-medium text-heading>Gender</label>
+      <select [formField]="serviceUserForm.gender" class="m-2  py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ serviceUserForm.gender().touched() && serviceUserForm.gender().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }}">
+        <option value="" disabled selected>
+          Select gender
+        </option>
+        @for (option of genderOptions; track option) {
+        <option [value]="option">{{ option }}</option>
+        }
+      </select>
+      @if (serviceUserForm.gender().touched() && serviceUserForm.gender().invalid()) {
+      <ul class="mt-1 text-xs text-red-500">
+        @for (error of serviceUserForm.gender().errors(); track $index) {
+        <li>{{ error.message }}</li>
+        }
+      </ul>
+      }
+    </div>
+    <div class="flex justify-center gap-5">
+      <button class="btn btn-secondary justify-center" type="button" (click)="resetForm()">Cancel</button>
+      <button [disabled]="serviceUserForm().invalid()" class="btn btn-primary justify-center"
+        type="submit">Submit</button>
+    </div>
+
+  </form>
+  }
+  }
+</div>

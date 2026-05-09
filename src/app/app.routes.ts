@@ -7,10 +7,9 @@ import { PageNotBuilt } from './.features/page-not-built/page-not-built';
 import { authGuardAny } from './.services/auth/auth-guard-any';
 import { authGuard } from './.services/auth/auth-guard';
 import { Admin } from './.features/admin/admin';
-import { NewReferral } from './.features/referrals/new-referral/new-referral';
 import { Clinic } from './.features/clinic/clinic';
 import { Treatment } from './.features/treatment/treatment';
-
+import { FindSaveSU } from './.features/referrals/find-save-su/find-save-su';   
 
 export const routes: Routes = [
     {
@@ -30,8 +29,8 @@ export const routes: Routes = [
                 component: AboutComponent
             },
             {
-                path: 'referrals/create',
-                component: NewReferral,
+                path: 'referrals/findSaveSU',
+                component: FindSaveSU,
                 canActivate: [authGuard],
                 data: { roles: ['ADMIN', 'USER'] }
             },
