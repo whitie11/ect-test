@@ -1,1 +1,70 @@
-<p>new-referral works!</p>
+<div class=" flex flex-row items-start gap-5 justify-center">
+  <span class="card-title ">
+    New Referral for: {{ serviceUser()?.firstname }} {{
+    serviceUser()?.midname }} {{serviceUser()?.lastname}}
+  </span>
+  <span class="card-title ">
+    DoB: {{serviceUser()?.dob | date: 'dd/MM/yyyy'}}
+  </span>
+  <span class="card-title ">
+    NHSno:
+    {{serviceUser()?.nhsNo}}
+  </span>
+</div>
+
+<form (submit)="onSubmit()" class=" group" novalidate justify-center>
+
+  <div class="flex flex-row mb-4 items-center justify-center ">
+    <label class=" font-semibold mb-2">Referrer</label>
+    <input type="text" [formField]="referralForm.referrer" class=" m-2  px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ referralForm.referrer().touched() && referralForm.referrer().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }} " placeholder="Enter Referrers name">
+
+    @if (referralForm.referrer().touched() && referralForm.referrer().invalid()) {
+    <ul class="mt-1 text-xs text-red-500">
+      @for (error of referralForm.referrer().errors(); track $index) {
+      <li>{{ error.message }}</li>
+      }
+    </ul>
+    }
+  </div>
+
+  <div class="flex flex-row mb-4 items-center justify-center ">
+    <label class=" font-semibold mb-2">Referrers Email</label>
+    <input type="text" [formField]="referralForm.referrersEmail" class=" m-2  px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500
+         {{ referralForm.referrersEmail().touched() && referralForm.referrersEmail().invalid()
+            ? 'border-red-500 focus:ring-red-400'
+            : 'border-gray-300 focus:ring-blue-400' }} " placeholder="Enter Referrers name">
+
+    @if (referralForm.referrersEmail().touched() && referralForm.referrersEmail().invalid()) {
+    <ul class="mt-1 text-xs text-red-500">
+      @for (error of referralForm.referrersEmail().errors(); track $index) {
+      <li>{{ error.message }}</li>
+      }
+    </ul>
+    }
+  </div>
+
+</form>
+
+<div class="flex flex-row mx-8  gap-2">
+  <label class=" font-semibold ">Reason for Referral</label>
+  <div class="NgxEditor__Wrapper grow">
+    <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+    <ngx-editor 
+    [editor]="editor" 
+    [(ngModel)]="editorContent" 
+    (ngModelChange)="updateEditorChanges()"
+    [placeholder]="'Type here...'"></ngx-editor>
+  </div>
+</div>
+@if(textError().length > 0){
+  <div class="flex text-xs text-red-500 w-full justify-center">{{textError()}}</div>
+}
+
+
+<div class="flex justify-center gap-5 m-8">
+  <button class="btn btn-secondary justify-center"  >Cancel</button>
+  <button [disabled]="referralForm().invalid()" class="btn btn-primary justify-center" (click)="onSubmit()">Submit</button>
+</div>

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { TokenStorageService } from '../token/token-storage.service';
 import { Router} from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { JWTPayload } from '../../.models/JWTPayload';
+import { JWTPayload } from '../../.models/jwtpayload';
 import { jwtDecode } from 'jwt-decode';
 import { AuthResponse } from '../../.models/auth-response';
 

@@ -11,11 +11,10 @@ import { StageEnum } from '../../../.enums/stage';
 import { NewNoteDialog } from '../../progress_notes/components/new-note-dialog/new-note-dialog';
 import { NewNoteDTO } from '../../../.dtos/newNoteDTO';
 import { ProgressNotesService } from '../../../.services/progress_notes/progress-notes-service';
-import { SafeHtmlPipePipe } from '../../../.pipes/safe-html-pipe-pipe';
 
 @Component({
   selector: 'app-referral-details',
-  imports: [DatePipe, ProgressNotes, PortalModule, CdkOverlayOrigin, SafeHtmlPipePipe],
+  imports: [DatePipe, ProgressNotes, PortalModule, CdkOverlayOrigin],
   templateUrl: './referral-details.html',
   styleUrl: './referral-details.css',
 })
@@ -34,6 +33,19 @@ export class ReferralDetails {
 
   refreshNotes = signal<boolean>(true);
 
+  showNotes = signal<boolean>(false);
+
+toggleNotes() {
+  // This updates BOTH the component's state AND the parent's model!
+  this.showNotes.set(!this.showNotes());
+}
+
+showReason = signal<boolean>(false);
+
+toggleReason() {
+  // This updates BOTH the component's state AND the parent's model!
+  this.showReason.set(!this.showReason());
+}
   protected changeStageOpen = false;
 
   stage = signal<StageEnum>(StageEnum.UNKNOWN);
@@ -112,7 +124,7 @@ export class ReferralDetails {
     if (this.selectedReferralId() === 0) {
       return null;
     }
-    return this.referralService.getReferralServiceUser(this.selectedReferralId()).subscribe({
+    return this.referralService.getReferralDetails(this.selectedReferralId()).subscribe({
       next: (data) => {
         console.log('Referral Service User fetched successfully', data);
         const res = JSON.parse(JSON.stringify(data));

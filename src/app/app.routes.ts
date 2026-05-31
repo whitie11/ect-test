@@ -9,7 +9,8 @@ import { authGuard } from './.services/auth/auth-guard';
 import { Admin } from './.features/admin/admin';
 import { Clinic } from './.features/clinic/clinic';
 import { Treatment } from './.features/treatment/treatment';
-import { FindSaveSU } from './.features/referrals/find-save-su/find-save-su';   
+import { FindSaveSU } from './.features/referrals/find-save-su/find-save-su';  
+import { NewReferral } from './.features/referrals/new-referral/new-referral'; 
 
 export const routes: Routes = [
     {
@@ -34,7 +35,12 @@ export const routes: Routes = [
                 canActivate: [authGuard],
                 data: { roles: ['ADMIN', 'USER'] }
             },
-
+            {
+                path: 'referrals/newReferral/:suId',
+                component: NewReferral,
+                canActivate: [authGuard],
+                data: { roles: ['ADMIN', 'USER'] }
+            },
             {
                 path: 'referrals',
                 component: Referrals,

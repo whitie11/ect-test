@@ -8,7 +8,7 @@ import { Appointment } from '../../.models/appointment';
 import { DatePipe } from '@angular/common';
 import { CdkPortal, ComponentPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { NewApptDialog } from '../treatment/components/new-appt-dialog/new-appt-dialog';
+import { NewApptDialog } from './components/new-appt-dialog/new-appt-dialog';
 import { TreatmentStageEnum } from '../../.enums/treatmentStage';
 import { ConsentEnum, SectionEnum } from '../../.enums/section';
 import { ReferralStageUpdateDto } from '../../.services/referrals/models/referral-stage-update-dto';
@@ -152,7 +152,7 @@ export class Clinic implements OnChanges {
 
   private overlayRef: OverlayRef | null = null;
 
-  newTreatmentDialog(ref: ReferralRefResponse, date: Date) {
+  newAppointmentDialog(ref: ReferralRefResponse, date: Date) {
     this.overlayRef = this.overlay.create({
       hasBackdrop: true,
       backdropClass: "cdk-overlay-dark-backdrop",
@@ -170,10 +170,10 @@ export class Clinic implements OnChanges {
     componentRef.instance.ref.set(ref);
     componentRef.instance.date.set(date)
     componentRef.instance.closeDialog.subscribe(() => {
-      this.closeNewTreatmentDialog();
+      this.closeNewAppointmentDialog();
     });
     componentRef.instance.saveChanges.subscribe((n) => {
-      this.newTreatmentSession(
+      this.newAppointment(
         n.ref,
         n.treatmentStage,
         n.treatmentNo,
@@ -186,7 +186,7 @@ export class Clinic implements OnChanges {
     this.overlayRef?.backdropClick().subscribe(() => this.overlayRef?.detach());
   }
 
-  closeNewTreatmentDialog() {
+  closeNewAppointmentDialog() {
     this.overlayRef?.detach();
   }
 
@@ -249,7 +249,7 @@ export class Clinic implements OnChanges {
 
     if (event.container.id === 'list 1') {
       if (!this.apptList1().some(item => item.referralId == ref.referralId)) {
-        const ts = this.showNewTreatmentDialog(ref, this.apptDate1(), 1);
+        const ts = this.showNewAppointmentDialog(ref, this.apptDate1(), 1);
       }
     }
 
@@ -269,27 +269,27 @@ export class Clinic implements OnChanges {
         });
       }
       if (itemCount == 0) {
-        const ts = this.showNewTreatmentDialog(ref, this.apptDate2(), 2);
+        const ts = this.showNewAppointmentDialog(ref, this.apptDate2(), 2);
       }
     }
 
       if (event.container.id === 'list 3') {
         if (!this.apptList3().some(item => item.date.toLocaleDateString() == this.apptDate3().toLocaleDateString() && item.referralId == ref.referralId)) {
-          const ts = this.showNewTreatmentDialog(ref, this.apptDate3(), 3);
+          const ts = this.showNewAppointmentDialog(ref, this.apptDate3(), 3);
         }
       }
       if (event.container.id === 'list 4') {
         if (!this.apptList4().some(item => item.date.toLocaleDateString() == this.apptDate4().toLocaleDateString() && item.referralId == ref.referralId)) {
-          const ts = this.showNewTreatmentDialog(ref, this.apptDate4(), 4);
+          const ts = this.showNewAppointmentDialog(ref, this.apptDate4(), 4);
         }
       }
     }
 
-    showNewTreatmentDialog(ref: ReferralRefResponse, date: Date, list: number) {
-      this.newTreatmentDialog(ref, date)
+    showNewAppointmentDialog(ref: ReferralRefResponse, date: Date, list: number) {
+      this.newAppointmentDialog(ref, date)
     }
 
-    newTreatmentSession(
+    newAppointment(
       ref: ReferralRefResponse,
       treatmentStage: TreatmentStageEnum,
       treatmentNo: number,
@@ -382,9 +382,9 @@ export class Clinic implements OnChanges {
       });
     }
 
-    getLastTreatmentData(refId: number) {
+    // getLastAppointmentData(refId: number) {
 
-    }
+    // }
 
     addDate() {
       this.diaryStart.set(this.adjDate(new Date(this.diaryStart().setDate(this.diaryStart().getDate() + 1))))

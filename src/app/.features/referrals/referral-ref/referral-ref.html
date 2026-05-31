@@ -1,9 +1,11 @@
-<div class="card bg-primary text-primary-content my-2">
-      <div class="card-body p-1">
-        <h2 class="card-title p-0">{{referral?.serviceUser?.firstname}} {{referral?.serviceUser?.midname}} {{referral?.serviceUser?.lastname}}
-          
-        </h2>
-        <!-- <h4 class="card-subtitle">NHS no: {{referral?.nhsNo}}</h4> -->
-        <h3 class="card-subtitle">Date Referred: {{referral?.dateReferred | date: 'dd/MM/yyyy'}}</h3>
-      </div>
+<div class="card bg-primary text-white my-2">
+  <div class="card-body p-1">
+    <div [style.backgroundColor]="bgColour(referral?.stage)">
+      <h2 class="card-title p-0">{{referral?.serviceUser?.firstname}} {{referral?.serviceUser?.midname}}
+        {{referral?.serviceUser?.lastname}}
+      </h2>
+      <!-- <h4 class="card-subtitle">NHS no: {{referral?.nhsNo}}</h4> -->
+      <h3 class="card-subtitle">Date Referred: {{referral?.dateReferred | date: 'dd/MM/yyyy'}}</h3>
     </div>
+  </div>
+</div>

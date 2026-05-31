@@ -6,7 +6,8 @@ import { ReferralRefResponse } from './models/referral-ref-response';
 import { ReferralSuResponse } from './models/referral-su-response';
 import { ReferralStageUpdateDto } from './models/referral-stage-update-dto';
 import { StageEnum } from '../../.enums/stage';
-
+import { NewReferralDTO } from '../../.dtos/newReferralDTO'
+ 
 @Injectable({
   providedIn: 'root',
 })
@@ -22,8 +23,12 @@ export class ReferralsService {
     return this.http.get<ReferralRefResponse[]>(this.apiRoot.concat('referrals/get_all_open'));
   } 
   
-  getReferralServiceUser(id: number) : Observable<ReferralSuResponse>{
+  getReferralDetails(id: number) : Observable<ReferralSuResponse>{
   return this.http.get<ReferralSuResponse>(this.apiRoot.concat(`referrals/${id}`));
+  }
+
+  getReferralServiceUser(id: number) : Observable<ReferralSuResponse>{
+  return this.http.get<ReferralSuResponse>(this.apiRoot.concat(`referrals/get_open_su/${id}`));
   }
 
   updateReferralStage(ref: ReferralStageUpdateDto) : Observable<ReferralSuResponse> | null{
@@ -38,6 +43,10 @@ export class ReferralsService {
 
   getReferralsByStage(stage: string) : Observable<ReferralRefResponse[]>{
   return this.http.get<ReferralRefResponse[]>(this.apiRoot.concat(`referrals/stage/${stage}`))
+  }
+
+  saveReferral(ref: NewReferralDTO) : Observable<ReferralRefResponse> {
+    return this.http.post<ReferralRefResponse>(this.apiRoot.concat('referrals/add'), ref)
   }
 }
 

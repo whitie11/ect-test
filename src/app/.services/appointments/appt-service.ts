@@ -24,6 +24,10 @@ export class ApptService {
     return this.http.get<Appointment>(this.apiRoot.concat(`/appts/get_appointment/${id}`));
   }
 
+  getLastAppointment(refId: number): Observable<Appointment> {
+    return this.http.get<Appointment>(this.apiRoot.concat(`/appts/get_last_appointment/${refId}`));
+  }
+
   saveAppt(appt: NewApptDTO): Observable<Appointment> | null {
     try {
       let data = this.http.post<Appointment>(this.apiRoot.concat(`appts/new_appt`), appt);

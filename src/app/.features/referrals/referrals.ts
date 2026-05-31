@@ -44,7 +44,6 @@ refTreatB = signal<ReferralRefResponse[]>([]);
 
     this.referralService.getAllReferrals().subscribe({
       next: (data) => {
-
         console.log('Referrals fetched successfully', data);
         const res = JSON.parse(JSON.stringify(data)).referrals;
         let refArray: ReferralRefResponse[] = [];

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { JWTPayload } from '../../.models/JWTPayload';
+import { JWTPayload } from '../../.models/jwtpayload';
 import { DateTime } from 'luxon';
 import { AuthResponse } from '../../.models/auth-response';
 

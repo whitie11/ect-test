@@ -1,0 +1,75 @@
+<div class="card bg-blue-100 text-black shadow-xl ">
+    <div class="card-body min-w-200 overflow-auto">
+        <h2 class="card-title">Add New Appointment for
+            {{ref()?.serviceUser?.firstname}}
+            {{ref()?.serviceUser?.midname}}
+            {{ref()?.serviceUser?.lastname}}
+            on {{date() | date: 'EEE dd/MM/yyyy'}}
+        </h2>
+
+        <div class="flex flex-row">
+            <div>
+                <div class="flex flex-row items-center mb-2.5">
+                    <label class="font-medium text-heading">Treatment Type:</label>
+                    <select class="select select-primary bg-white ml-1 w-32" [value]="treatmentStage()">
+                        @for (stage of treatmentStageOptions; track stage) {
+                        <option (click)="updateTreatmentStage(stage)">{{stage}}</option>
+                        }
+                    </select>
+
+                    <label for="number-input" class="flex  align-middle ml-1.5 font-medium text-heading">
+                        Number:</label>
+                    <input type="number" id="number-input" aria-describedby="helper-text-explanation"
+                        [value]="treatmentNo()" (input)="updateTreatmentNo($event.target.value)" class="block ml-1 px-3 py-2.5 h-10 bg-white border border-default-medium 
+                                            text-heading text-sm rounded-base focus:ring-brand focus:border-brand 
+                                            shadow-xs placeholder:text-body
+                                            w-16" required />
+                </div>
+
+                <div class="flex flex-row items-center mb-2.5">
+                    <label for="number-input" class="font-medium text-heading">Section:</label>
+                    <select class="select select-primary bg-white ml-1" [value]="section()">
+                        <option disabled selected>Legal Status</option>
+                        @for (section of sectionOptions; track section) {
+                        <option (click)="updateSection(section)">{{section}}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="flex flex-row items-center mb-2.5">
+                    <label for="number-input" class="font-medium text-heading">Consent:</label>
+                    <select class="select select-primary bg-white ml-1" [value]="consent()">
+                        <option disabled selected>Consent Status</option>
+                        @for (consent of consentOptions; track consent) {
+                        <option (click)="updateConsent(consent)">{{consent}}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="flex flex-row items-center mb-2.5">
+                    <label for="text-input" class="font-medium text-heading align-middle">Ward/Community?:</label>
+                    <input type="text" id="text-input" aria-describedby="helper-text-explanation" [value]="location()"
+                        (input)="updateLocation($event.target.value)" class="block ml-1 px-3 py-2.5 h-10 bg-white border border-default-medium 
+                            text-heading text-sm rounded-base focus:ring-brand focus:border-brand 
+                            shadow-xs placeholder:text-body w-70" required />
+                </div>
+            </div>
+             <div> 
+                <ul class="menu bg-blue-200 rounded-box">   
+                <li>Last Appointment: {{lastAppt()?.date | date: 'EEE dd/MM/yyyy'}}</li>
+                <li>Type: {{lastAppt()?.treatmentStage}}</li>
+                <li>Section: {{lastAppt()?.section}}</li>
+                <li>Consent: {{lastAppt()?.consent}} </li>  
+                <li>Ward/Community: {{lastAppt()?.residing}}</li>
+                </ul>   
+            </div>  
+        </div>
+    </div>
+
+    <div class="card-footer flex space-x-1 justify-end my-1.5  mx-6">
+        <button class="btn btn-secondary" (click)="doCloseDialog()">Cancel</button>
+
+        <button [disabled]="formNotValid()" class="btn btn-primary w-24 disabled:cursor-not-allowed disabled:opacity-40"
+            (click)="onSubmit()">Submit</button>
+    </div>
+</div>
